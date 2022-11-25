@@ -5,14 +5,23 @@ const fs = require('fs')
 exports.createPost = (req, res, next) => {
     const userId = res.locals.userId
     const postObject = JSON.parse(req.body.post)
+    let date1 = new Date();
+    const dateLocale = date1.toLocaleString('fr-FR',{
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'});
     delete postObject._id
     const post = new Post({
         userId: userId,
-        pseudo: postObject.pseudo,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         description: postObject.description,
+        postDate: dateLocale,
         likes: 0,
-        usersLiked: []
+        usersLiked: [],
     })
     post.save()
         .then(() => res.status(201).json({ message: 'Post enregistré'}))
@@ -29,8 +38,8 @@ exports.getAllPosts = (req, res, next) => {
 
 //Affichage d'une seule sauce
 exports.getOnePost = (req, res, next) => {
-    Post.findOne({ _id: req.params.id})
-        .then(post => res.status(200).json({ post }))
+    Post.findOne({ _id: req.params.id}, 'description')
+        .then(post => res.status(200).json( post ))
         .catch(error => res.status(404).json({ error }))
 }
 
@@ -48,7 +57,7 @@ exports.modifyPost = (req, res, next) => {
                         description: postObject.description
                     })
                     Post.updateOne({ _id: req.params.id }, { ...modifiedPost, _id: req.params.id })
-                        .then(() => res.status(200).json({ message: 'Post modifiée!' }))
+                        .then(() => res.status(200).json({ message: 'Post modifié!' }))
                         .catch(error => res.status(400).json({ error }));
                 })
                 
@@ -61,7 +70,7 @@ exports.modifyPost = (req, res, next) => {
                 description: req.body.description
             })
             Post.updateOne({ _id: req.params.id }, { ...modifiedPost, _id: req.params.id })
-                .then(() => res.status(200).json({ message: 'Post modifiée!' }))
+                .then(() => res.status(200).json({ message: 'Post modifié!' }))
                 .catch(error => res.status(400).json({ error }));
       
     }
