@@ -33,7 +33,6 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Identifiant ou mot de passe incorrect !' })
                     } else {
-                        res.status.pseudo
                         return res.status(200).json({
                             userId: user._id,
                             token: jwt.sign(
