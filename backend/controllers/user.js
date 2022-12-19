@@ -23,7 +23,7 @@ exports.signup = (req, res, next) => {
 }
 
 exports.login = (req, res, next) => {
-    User.findOne({pseudo: req.body.pseudo} || {email: req.body.email})
+    User.findOne({pseudo: req.body.pseudo})
         .then(user => {
             if (!user) {
                 return res.status(401).json({ message: 'Identifiant ou mot de passe incorrect' })

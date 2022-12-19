@@ -1,5 +1,6 @@
 const Post = require('../models/Post')
 const fs = require('fs')
+const { populate } = require('../models/Post')
 
 // Création d'un Post
 exports.createPost = (req, res, next) => {
@@ -22,6 +23,8 @@ exports.createPost = (req, res, next) => {
         postDate: dateLocale,
         likes: 0,
         usersLiked: [],
+        user: userId
+        
     })
     post.save()
         .then(() => res.status(201).json({ message: 'Post enregistré'}))
@@ -31,14 +34,14 @@ exports.createPost = (req, res, next) => {
 
 // Affichage de toutes les sauces
 exports.getAllPosts = (req, res, next) => {
-    Post.find()
+     Post.find().populate("user")
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }))
 }
 
 //Affichage d'une seule sauce
 exports.getOnePost = (req, res, next) => {
-    Post.findOne({ _id: req.params.id})   
+    Post.findOne({ _id: req.params.id}).populate("user")   
         .then(post => res.status(200).json( post ))
         .catch(error => res.status(404).json({ error }))
 }
@@ -84,9 +87,7 @@ exports.deletePost = (req, res, next) => {
             if(!post) {
                 return res.status(400).json({ message: "Le post recherché n'existe pas " })
             }
-            if(post.userId != res.locals.userId) {
-                return res.status(401).json({ message: "Vous n'êtes pas le propriétaire de ce votre Post" })
-            }
+            console.log(res.locals)
             const filename = post.imageUrl.split('/images/')[1]
             fs.unlink(`images/${filename}`, () => 
                 Post.deleteOne({ _id: req.params.id })
@@ -114,7 +115,7 @@ exports.likePost = (req, res, next) => {
                     if(indexLike > -1){
                         return res.status(401).json({ message: "post déjà noté" })
                     } else {
-                        newValues.usersLiked.push(userId)
+                        newValues.usersLiked.push( userId )
                     }
                     break
                     
