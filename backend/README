@@ -1,2 +1,21 @@
-Ajouter un dossier image
-ajouter un fichier .env avec MONGO_URI et SECRET
+Bienvenue sur la partie Backend de P7_Groupomania
+
+Api du site piquante PREREQUIS :
+
+-Avoir node.js
+-Avoir npm
+
+Marche à suivre pour lancer le backend :
+
+
+-Faire un git clone : https://github.com/elchoup/P7_Groupomania.git
+
+-Ouvrir le terminal du dossier backend
+
+-Faire la commande npm install
+
+-Créer un dossier images dans le dossier backend
+
+-créer un fichier .env dans le dossier backend à l'intérieur duquel vous devez mettre les clefs suivantes et leur valeur : - MONGO_URI = 'Fichier txt mongoConnect que je vous ai envoyé' - SECRET = 'valeur au choix (ex : 'toto')'
+
+-Faire la commande npm run start ou nodemon server et lancer le serveur sur le port 3000

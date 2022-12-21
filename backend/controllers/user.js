@@ -23,7 +23,7 @@ exports.signup = (req, res, next) => {
 }
 
 exports.login = (req, res, next) => {
-    User.findOne({pseudo: req.body.pseudo})
+    User.findOne({email: req.body.email})
         .then(user => {
             if (!user) {
                 return res.status(401).json({ message: 'Identifiant ou mot de passe incorrect' })
@@ -38,8 +38,10 @@ exports.login = (req, res, next) => {
                             token: jwt.sign(
                                 { userId: user._id },
                                 process.env.SECRET,
-                                { expiresIn: '24h' }
-                            )
+                                { expiresIn: '24h' }                             
+                            ),
+                            userPseudo: user.pseudo,
+                            userAdmin: user.isAdmin
                         });
                     }
                 })
